@@ -2,8 +2,11 @@ from flask import Flask, request, jsonify
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+import os
 
-app = Flask(__name__)
+app = Flask(**name**)
+
+# Load model once when server starts
 
 model = tf.keras.models.load_model("mobilenet_plant_model.h5")
 
@@ -21,30 +24,35 @@ classes = [
 "Tomato___Bacterial_spot","Tomato___Early_blight","Tomato___Late_blight","Tomato___Leaf_Mold",
 "Tomato___Septoria_leaf_spot","Tomato___Spider_mites","Tomato___Target_Spot",
 "Tomato___Yellow_Leaf_Curl_Virus","Tomato___Mosaic_virus","Tomato___healthy"
-
 ]
 
 def preprocess(img):
-    img = img.resize((224,224))
-    img = np.array(img)/255.0
-    img = np.expand_dims(img, axis=0)
-    return img
+img = img.convert("RGB")
+img = img.resize((224, 224))
+img = np.array(img) / 255.0
+img = np.expand_dims(img, axis=0)
+return img
 
 @app.route("/")
 def home():
-    return "Plant Disease API Running"
+return "Plant Disease API Running"
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    file = request.files["file"]
-    img = Image.open(file)
+if "file" not in request.files:
+return jsonify({"error": "No file uploaded"}), 400
 
-    img = preprocess(img)
+```
+file = request.files["file"]
+img = Image.open(file)
+img = preprocess(img)
 
-    pred = model.predict(img)
-    result = classes[np.argmax(pred)]
+pred = model.predict(img)
+result = classes[np.argmax(pred)]
 
-    return jsonify({"prediction": result})
+return jsonify({"prediction": result})
+```
 
-if __name__ == "__main__":
-    app.run()
+if **name** == "**main**":
+port = int(os.environ.get("PORT", 10000))
+app.run(host="0.0.0.0", port=port)
