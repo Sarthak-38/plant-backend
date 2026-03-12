@@ -40,7 +40,7 @@ return "Plant Disease API Running"
 @app.route("/predict", methods=["POST"])
 def predict():
 if "file" not in request.files:
-return jsonify({"error":"No file uploaded"}), 400
+return jsonify({"error": "No file uploaded"}), 400
 
 file = request.files["file"]
 img = Image.open(file)
@@ -53,5 +53,5 @@ result = classes[np.argmax(pred)]
 return jsonify({"prediction": result})
 
 if name == "main":
-port = int(os.environ.get("PORT",10000))
-app.run(host="0.0.0.0",port=port)
+port = int(os.environ.get("PORT", 10000))
+app.run(host="0.0.0.0", port=port)
