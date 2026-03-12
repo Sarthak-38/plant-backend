@@ -4,9 +4,9 @@ import numpy as np
 from PIL import Image
 import os
 
-app = Flask(**name**)
+app = Flask(name)
 
-# Load model once when server starts
+Load model
 
 model = tf.keras.models.load_model("mobilenet_plant_model.h5")
 
@@ -28,8 +28,8 @@ classes = [
 
 def preprocess(img):
 img = img.convert("RGB")
-img = img.resize((224, 224))
-img = np.array(img) / 255.0
+img = img.resize((224,224))
+img = np.array(img)/255.0
 img = np.expand_dims(img, axis=0)
 return img
 
@@ -40,19 +40,18 @@ return "Plant Disease API Running"
 @app.route("/predict", methods=["POST"])
 def predict():
 if "file" not in request.files:
-return jsonify({"error": "No file uploaded"}), 400
+return jsonify({"error":"No file uploaded"}), 400
 
-```
 file = request.files["file"]
 img = Image.open(file)
+
 img = preprocess(img)
 
 pred = model.predict(img)
 result = classes[np.argmax(pred)]
 
 return jsonify({"prediction": result})
-```
 
-if **name** == "**main**":
-port = int(os.environ.get("PORT", 10000))
-app.run(host="0.0.0.0", port=port)
+if name == "main":
+port = int(os.environ.get("PORT",10000))
+app.run(host="0.0.0.0",port=port)
